@@ -209,30 +209,6 @@ class WPCOM_Liveblog_Entry {
 		return $entry;
 	}
 
-	/**
-	 * Deletes an existing entry
-	 *
-	 * Inserts a new entry, which replaces the original entry.
-	 *
-	 * @param array $args The entry properties: entry_id (which entry to delete), post_id, user (current user object)
-	 * @return WPCOM_Liveblog_Entry|WP_Error The newly inserted entry, which replaces the original
-	 */
-	public static function delete( $args ) {
-		if ( !$args['entry_id'] ) {
-			return new WP_Error( 'entry-delete', __( 'Missing entry ID', 'liveblog' ) );
-		}
-		$args['content'] = '';
-		$comment = self::insert_comment( $args );
-		if ( is_wp_error( $comment ) ) {
-			return $comment;
-		}
-		do_action( 'liveblog_delete_entry', $comment->comment_ID, $args['post_id'] );
-		add_comment_meta( $comment->comment_ID, self::replaces_meta_key, $args['entry_id'] );
-		wp_delete_comment( $args['entry_id'] );
-		$entry = self::from_comment( $comment );
-		return $entry;
-	}
-
 	public static function delete_key( $args ) {
 		if ( !$args['entry_id'] ) {
 			return new WP_Error( 'entry-delete', __( 'Missing entry ID', 'liveblog' ) );
