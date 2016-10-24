@@ -50,26 +50,6 @@ class Test_Entry extends WP_UnitTestCase {
 		$this->assertTrue( isset( $GLOBALS['liveblog_hook_fired'] ) );
 	}
 
-	function test_delete_should_replace_the_content_in_the_query() {
-		$entry = $this->insert_entry();
-		$update_entry = WPCOM_Liveblog_Entry::delete( $this->build_entry_args( array( 'entry_id' => $entry->get_id()) ) );
-		$this->assertEquals( $entry->get_id(), $update_entry->replaces );
-		$this->assertEquals( '', $update_entry->get_content() );
-	}
-
-	function test_delete_should_return_entry_with_type_delete() {
-		$entry = $this->insert_entry();
-		$update_entry = WPCOM_Liveblog_Entry::delete( $this->build_entry_args( array( 'entry_id' => $entry->get_id() ) ) );
-		$this->assertEquals( 'delete', $update_entry->get_type() );
-	}
-
-	function test_delete_should_delete_original_entry() {
-		$entry = $this->insert_entry();
-		$update_entry = WPCOM_Liveblog_Entry::delete( $this->build_entry_args( array( 'entry_id' => $entry->get_id() ) ) );
-		$query = new WPCOM_Liveblog_Entry_Query( $entry->get_post_id(), 'liveblog' );
-		$this->assertNull( $query->get_by_id( $entry->get_id() ) );
-	}
-
 	function test_user_input_sanity_check() {
 		$user_input  = "<iframe></iframe>";
 		$user_input .= "<script></script>";
