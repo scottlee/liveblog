@@ -58,18 +58,6 @@ class Test_Entry_Query extends WP_UnitTestCase {
 		$this->assertEquals( 0, count( $entries ) );
 	}
 
-	function test_remove_replaced_entries_should_not_remove_entries_replacing_non_existing_entries() {
-		$entries = array();
-
-		$entries[0] = new WPCOM_Liveblog_Entry( (object)array( 'comment_ID' => 1 ) );
-
-		$entries[1] = new WPCOM_Liveblog_Entry( (object)array( 'comment_ID' => 1000 ) );
-		$entries[1]->replaces = 999;
-
-		$filtered_entries =  WPCOM_Liveblog_Entry_Query::remove_replaced_entries( $entries );
-		$this->assertEquals( array( 1, 1000 ), $this->get_ids_from_entries( $filtered_entries ) );
-	}
-
 	function test_get_by_id_should_return_the_entry() {
 		$comment_id = $this->create_comment();
 		$this->assertEquals( $comment_id, $this->entry_query->get_by_id( $comment_id )->get_id() );
