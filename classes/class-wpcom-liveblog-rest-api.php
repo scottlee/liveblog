@@ -246,6 +246,9 @@ class WPCOM_Liveblog_Rest_Api {
 					'limit' => array(
 						'required' => true,
 					),
+					'blog_id' => array(
+						'required' => true,
+					),
 				),
 			)
 		);
@@ -427,8 +430,9 @@ class WPCOM_Liveblog_Rest_Api {
 	public static function update_post_state( WP_REST_Request $request ) {
 
 		// Get required parameters from the request
-		$post_id         = $request->get_param( 'post_id' );
-		$state           = $request->get_param( 'state' );
+		$post_id = $request->get_param( 'post_id' );
+		$state   = $request->get_param( 'state' );
+		$blog_id = $request->get_param( 'blog_id' );
 
 		// Additional request variables used in the liveblog_admin_settings_update action
 		$request_vars = array(
@@ -441,7 +445,7 @@ class WPCOM_Liveblog_Rest_Api {
 		self::set_liveblog_vars( $post_id );
 
 		// Save post state
-		$meta_box = WPCOM_Liveblog::admin_set_liveblog_state_for_post( $post_id, $state, $request_vars );
+		$meta_box = WPCOM_Liveblog::admin_set_liveblog_state_for_post( $post_id, $state, $request_vars, $blog_id );
 
 		// Possibly do not cache the response
 		WPCOM_Liveblog::prevent_caching_if_needed();

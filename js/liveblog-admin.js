@@ -18,6 +18,7 @@ jQuery( function( $ ) {
 			data['template_format']                 = encodeURIComponent( $( '#liveblog-key-template-format' ).val() );
 			data['limit']                           = encodeURIComponent( $( '#liveblog-key-limit' ).val() );
 			data[liveblog_admin_settings.nonce_key] = liveblog_admin_settings.nonce;
+			data['blog_id'] = liveblog_admin_settings.blog_id;
 			var method = 'POST';
 
 		} else {

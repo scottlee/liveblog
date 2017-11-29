@@ -807,6 +807,7 @@ final class WPCOM_Liveblog {
 				'short_error_message_template' => __( 'Error: {error-message}', 'liveblog' ),
 				'use_rest_api'                 => $use_rest_api,
 				'endpoint_url'                 => $endpoint_url,
+				'blog_id'                      => ( is_multisite() ) ? get_current_blog_id() : 0
 			) );
 		}
 	}
@@ -1161,7 +1162,15 @@ final class WPCOM_Liveblog {
 	 *
 	 * @return string The metabox markup
 	 */
-	public static function admin_set_liveblog_state_for_post( $post_id, $new_state, $request_vars ) {
+	public static function admin_set_liveblog_state_for_post( $post_id, $new_state, $request_vars, $blog_id = null ) {
+
+		/**
+		 * WIP: If this is a network install make sure to we're looking at the correct
+		 * site for the post_id
+		 */
+		if ( 0 !== (int) $blog_id ) {
+			switch_to_blog( $blog_id );
+		}
 
 		$post = get_post( $post_id );
 
@@ -1172,6 +1181,14 @@ final class WPCOM_Liveblog {
 		do_action( 'liveblog_admin_settings_update', $request_vars, $post_id );
 
 		self::set_liveblog_state( $post_id, $new_state );
+
+		/**
+		 * WIP: Restore current blog.
+		 * Restoring any earlier will cause the post_meta entry to fail.
+		 */
+		if ( 0 !== (int) $blog_id ) {
+			restore_current_blog();
+		}
 
 		return self::get_meta_box( $post );
 
